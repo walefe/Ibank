@@ -6,7 +6,7 @@ export class PayableModel {
   declare id: string;
   declare value: number;
   declare emissionDate: Date;
-  declare assignor: string;
+  declare assignorId: string;
 
   private constructor(data: PayableModel) {
     Object.assign(this, data);
