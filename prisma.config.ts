@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { join } from 'node:path';
 import type { PrismaConfig } from 'prisma/config';
 
