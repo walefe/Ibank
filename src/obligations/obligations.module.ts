@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ObligationsController } from '@src/obligations/http/obligations.controller';
+import { PrismaService } from '@src/prisma.service';
+import { ObligationsController } from './http/rest/controller/obligations.controller';
 
 @Module({
   controllers: [ObligationsController],
+  providers: [PrismaService],
 })
 export class ObligationsModule {}
