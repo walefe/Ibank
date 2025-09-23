@@ -14,7 +14,7 @@
     "target": "es2024",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -23,7 +23,7 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@src/*": ["./src/*"],
+      "@src/*": ["src/*"],
     },
     "lib": [
       "es2024",
@@ -33,5 +33,9 @@
       "ESNext.Promise"
     ],
   },
-  "include": ["src/**/*", "test/**/*", "prisma.config.ts"]
+  "include": ["src/**/*", "test/**/*", "jest.config.ts", "jest.e2e.ts", "prisma.config.ts"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
