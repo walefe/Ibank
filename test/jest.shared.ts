@@ -1,7 +1,8 @@
 export default {
+  roots: ['<rootDir>/src'],
   moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: '..',
   testEnvironment: 'node',
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
   moduleNameMapper: {
     '^@src/(.*)$': '<rootDir>/src/$1',
   },

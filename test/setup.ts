@@ -20,6 +20,10 @@ if (!fs.existsSync(testEnvFile)) {
 // If a .env.test file is not found, the DATABASE_URL will fallback to the
 // default. Consequently, you'll lose your development database during the
 // integration tests teardown. Hence, the check above.
+const originalConsoleLog = console.log; //this is to prevent logs of dotenv when test runs
+console.log = () => {};
+
 dotenv.config({ path: envFile });
 dotenv.config({ path: testEnvFile, override: true });
-console.log(`Test environment loaded: NODE_ENV=${process.env.NODE_ENV}`);
+
+console.log = originalConsoleLog; //this enables console after test runs
