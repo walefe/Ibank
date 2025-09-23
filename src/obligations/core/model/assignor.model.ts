@@ -1,8 +1,7 @@
 import { randomUUID } from 'node:crypto';
+import { DefaultModel, WithOptional } from './default.model';
 
-type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-export class AssignorModel {
+export class AssignorModel extends DefaultModel {
   declare id: string;
   declare document: string;
   declare email: string;
@@ -10,13 +9,18 @@ export class AssignorModel {
   declare name: string;
 
   private constructor(data: AssignorModel) {
+    super();
     Object.assign(this, data);
   }
 
-  static create(data: WithOptional<AssignorModel, 'id'>): AssignorModel {
+  static create(
+    data: WithOptional<AssignorModel, 'id' | 'createdAt' | 'updatedAt'>,
+  ): AssignorModel {
     return new AssignorModel({
       ...data,
-      id: randomUUID(),
+      id: data.id ? data.id : randomUUID(),
+      createdAt: data.createdAt ? data.createdAt : new Date(),
+      updatedAt: data.updatedAt ? data.updatedAt : new Date(),
     });
   }
 
