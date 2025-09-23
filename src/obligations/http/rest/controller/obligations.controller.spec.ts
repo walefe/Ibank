@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ObligationsController } from './obligations.controller';
-import { PrismaService } from '@src/prisma.service';
+import { PrismaService } from '@src/obligations/persistence/prisma.service';
 
 describe('ObligationsController', () => {
   let controller: ObligationsController;
