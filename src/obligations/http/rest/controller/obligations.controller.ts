@@ -15,12 +15,13 @@ import {
   createPayableSchema,
   type CreatePayableDto,
 } from '../dto/create-payable.dto';
-import { PrismaService } from '@src/prisma.service';
+
 import {
   createAssignorSchema,
   type CreateAssignorDto,
 } from '../dto/create-assignor.dto';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
+import { PrismaService } from '@src/obligations/persistence/prisma.service';
 
 @Controller('obligations')
 @Injectable()
