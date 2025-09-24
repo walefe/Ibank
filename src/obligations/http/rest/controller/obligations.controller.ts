@@ -8,9 +8,6 @@ import {
   UsePipes,
 } from '@nestjs/common';
 
-import { PayableModel } from '@src/obligations/core/model/payable.model';
-import { AssignorModel } from '@src/obligations/core/model/assignor.model';
-
 import {
   createPayableSchema,
   type CreatePayableDto,
@@ -21,81 +18,67 @@ import {
   type CreateAssignorDto,
 } from '../dto/create-assignor.dto';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
-import { PrismaService } from '@src/obligations/persistence/prisma.service';
+import { AssignorService } from '@src/obligations/core/service/assignor.service';
+import { PayableService } from '@src/obligations/core/service/payable.service';
 
 @Controller('obligations')
 @Injectable()
 export class ObligationsController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly assignorService: AssignorService,
+    private readonly payableService: PayableService,
+  ) {}
 
   @Get('payable')
   async getPayables() {
-    const payables = await this.prismaService.payable.findMany();
+    const output = await this.payableService.findAll();
     return {
-      data: payables,
+      data: output,
     };
   }
 
   @Get('payable/:id')
   async findOnePayable(@Param('id') id: string) {
-    const payable = await this.prismaService.payable.findFirst({
-      where: {
-        id,
-      },
-    });
+    const output = await this.payableService.findById(id);
+
     return {
-      data: payable,
+      data: output,
     };
   }
 
   @Get('assignor')
   async getAssignors() {
-    const assignors = await this.prismaService.assignor.findMany();
+    const output = await this.assignorService.findAll();
     return {
-      data: assignors,
+      data: output,
     };
   }
 
   @Get('assignor/:id')
   async findOneAssignor(@Param('id') id: string) {
-    const assignor = await this.prismaService.assignor.findFirst({
-      where: {
-        id,
-      },
-    });
+    const output = await this.assignorService.findById(id);
     return {
-      data: assignor,
+      data: output,
     };
   }
 
   @Post('payable')
   @UsePipes(new ZodValidationPipe(createPayableSchema))
   async createObligations(@Body() createPayableDto: CreatePayableDto) {
-    const model = PayableModel.create({
-      ...createPayableDto,
-      emissionDate: new Date(createPayableDto.emissionDate),
-    });
+    const output = await this.payableService.create(createPayableDto);
 
-    await this.prismaService.payable.create({
-      data: {
-        ...model,
-      },
-    });
-
-    return model;
+    return {
+      data: output,
+    };
   }
 
   @Post('assignor')
   @UsePipes(new ZodValidationPipe(createAssignorSchema))
   async createAssignor(@Body() createAssignorDto: CreateAssignorDto) {
-    const model = AssignorModel.create(createAssignorDto);
+    const output = await this.assignorService.create(createAssignorDto);
 
-    await this.prismaService.assignor.create({
-      data: {
-        ...model,
-      },
-    });
-
-    return model;
+    return {
+      data: output,
+    };
   }
 }
