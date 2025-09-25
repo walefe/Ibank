@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '@src/obligations/persistence/prisma.service';
+import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { PayableModel } from '../model/payable.model';
 
 type Input = {
