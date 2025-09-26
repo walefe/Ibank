@@ -6,4 +6,5 @@ export default {
   testMatch: ['<rootDir>/src/obligations/__test__/e2e/*.spec.ts'],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'], // Optional: separate e2e setup
   testTimeout: 30000, // Longer timeout for e2e tests
+  coverageDirectory: '<rootDir>/coverage/e2e',
 };

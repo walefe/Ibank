@@ -19,6 +19,6 @@ export default {
     '!src/**/*.e2e-spec.ts',
     '!src/main.ts',
   ],
-  coverageDirectory: '../coverage',
+  coverageDirectory: '<rootDir>/coverage/unit',
   coverageReporters: ['text', 'lcov', 'html'],
 };
