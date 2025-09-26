@@ -22,14 +22,19 @@ describe('Assignor (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.$transaction([
-      prisma.payable.deleteMany(),
-      prisma.assignor.deleteMany(),
-    ]);
+    await prisma.payable.deleteMany();
+    await prisma.assignor.deleteMany();
   });
 
   afterAll(async () => {
     await app.close();
+    await prisma.$disconnect();
+  });
+
+  beforeEach(async () => {
+    await prisma.$executeRawUnsafe(
+      `TRUNCATE TABLE "payable", "assignor" RESTART IDENTITY CASCADE`,
+    );
   });
 
   describe('/obligations/assignor (POST)', () => {
@@ -120,6 +125,30 @@ describe('Assignor (e2e)', () => {
         .get(`/obligations/assignor/${assignor.id}`)
         .expect(HttpStatus.OK);
       expect(response.body.data.id).toEqual(assignor.id);
+    });
+  });
+
+  describe('/obligations/assignor/:id (PUT)', () => {
+    it('should update an assignor based on :id', async () => {
+      const assignor = await prisma.assignor.create({
+        data: {
+          name: 'Acme test',
+          document: '000.000.000-00',
+          email: 'acme@test.com',
+          phone: '111111',
+        },
+      });
+      const dto = {
+        email: 'updated@test.com',
+      };
+
+      const result = await request(app.getHttpServer())
+        .put(`/obligations/assignor/${assignor.id}`)
+        .send(dto)
+        .expect(HttpStatus.OK);
+
+      expect(result.body.data.id).toEqual(assignor.id);
+      expect(result.body.data.email).toEqual(dto.email);
     });
   });
 });

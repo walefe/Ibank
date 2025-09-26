@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AssignorService } from '../assignor.service';
 import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { AssignorModel } from '../../model/assignor.model';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('Assignor Service (unit)', () => {
   let service: AssignorService;
@@ -13,6 +13,7 @@ describe('Assignor Service (unit)', () => {
       findMany: jest.fn(),
       findFirst: jest.fn(),
       findUnique: jest.fn(),
+      update: jest.fn(),
     },
   };
 
@@ -108,6 +109,56 @@ describe('Assignor Service (unit)', () => {
       const result = await service.findById('does-not-exist');
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('update()', () => {
+    it('should update an assignor', async () => {
+      const existAssignor = {
+        id: 'assignor-id',
+        document: '000000',
+        email: 'assignor@test.com',
+        name: 'assignor',
+        phone: '111111',
+      };
+      const updatedAssignor = {
+        ...existAssignor,
+        name: 'Updated',
+        phone: '000000',
+      };
+
+      mockPrisma.assignor.findUnique.mockResolvedValue(existAssignor);
+      mockPrisma.assignor.update.mockResolvedValue(updatedAssignor);
+
+      const result = await service.updateAssignor('assignor-id', {
+        name: 'Updated',
+        phone: '000000',
+      });
+
+      expect(mockPrisma.assignor.update).toHaveBeenCalled();
+      expect(mockPrisma.assignor.update).toHaveBeenCalledWith({
+        where: { id: 'assignor-id' },
+        data: { name: 'Updated', phone: '000000' },
+      });
+      expect(result).toEqual(updatedAssignor);
+    });
+
+    it('should throw when assignor id does not exist', async () => {
+      const assignor = {
+        id: 'assignor-id',
+        document: '000000',
+        email: 'assignor@test.com',
+        name: 'assignor',
+        phone: '111111',
+      };
+      mockPrisma.assignor.update.mockResolvedValue(assignor);
+
+      await expect(
+        service.updateAssignor('error-id', {
+          name: 'Updated',
+          phone: '000000',
+        }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });
