@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { AssignorModel } from '../model/assignor.model';
 
@@ -58,5 +62,25 @@ export class AssignorService {
     if (!assignor) return null;
 
     return AssignorModel.creteFrom(assignor);
+  }
+
+  async updateAssignor(
+    input: string,
+    data: Partial<Input>,
+  ): Promise<AssignorModel> {
+    const assignorExist = await this.prismaService.assignor.findUnique({
+      where: {
+        id: input,
+      },
+    });
+
+    if (!assignorExist) throw new NotFoundException();
+
+    return await this.prismaService.assignor.update({
+      where: {
+        id: input,
+      },
+      data,
+    });
   }
 }

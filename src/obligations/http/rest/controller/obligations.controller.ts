@@ -5,6 +5,7 @@ import {
   Injectable,
   Param,
   Post,
+  Put,
   UsePipes,
 } from '@nestjs/common';
 
@@ -20,6 +21,10 @@ import {
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
 import { AssignorService } from '@src/obligations/core/service/assignor.service';
 import { PayableService } from '@src/obligations/core/service/payable.service';
+import {
+  type UpdateAssignorDto,
+  updateAssignorSchema,
+} from '../dto/update-assignore.dto';
 
 @Controller('obligations')
 @Injectable()
@@ -76,6 +81,23 @@ export class ObligationsController {
   @UsePipes(new ZodValidationPipe(createAssignorSchema))
   async createAssignor(@Body() createAssignorDto: CreateAssignorDto) {
     const output = await this.assignorService.create(createAssignorDto);
+
+    return {
+      data: output,
+    };
+  }
+
+  @Put('assignor/:id')
+  async updateAssignor(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateAssignorSchema))
+    updateAssignorDto: UpdateAssignorDto,
+  ) {
+    console.log(id);
+    const output = await this.assignorService.updateAssignor(
+      id,
+      updateAssignorDto,
+    );
 
     return {
       data: output,
