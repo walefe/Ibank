@@ -4,7 +4,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '@src/app.module';
-import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
+import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
 describe('Payable (e2e)', () => {
   let app: INestApplication<App>;

@@ -7,7 +7,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml ./
 COPY prisma.config.ts ./
-COPY src/obligations/infra/database/prisma ./src/obligations/infra/database/prisma
+COPY src/shared/database/prisma ./src/shared/database/prisma
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm exec prisma generate
@@ -32,7 +32,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml ./
 COPY prisma.config.ts ./
-COPY src/obligations/infra/database/prisma ./src/obligations/infra/database/prisma
+COPY src/shared/database/prisma ./src/shared/database/prisma
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm exec prisma generate

@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { AssignorModel } from '../model/assignor.model';
+import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
 type Input = {
   name: string;
@@ -49,7 +49,13 @@ export class AssignorService {
   }
 
   async findAll(): Promise<AssignorModel[] | []> {
-    return await this.prismaService.assignor.findMany();
+    return await this.prismaService.assignor.findMany({
+      where: {
+        deleteAt: {
+          equals: null,
+        },
+      },
+    });
   }
 
   async findById(input: string): Promise<AssignorModel | null> {
@@ -81,6 +87,24 @@ export class AssignorService {
         id: input,
       },
       data,
+    });
+  }
+
+  async deleteAssignor(input: string) {
+    const assignorExist = await this.prismaService.assignor.findUnique({
+      where: {
+        id: input,
+      },
+    });
+    if (!assignorExist) throw new NotFoundException();
+    const timeStamp = new Date();
+    await this.prismaService.assignor.update({
+      where: {
+        id: input,
+      },
+      data: {
+        deleteAt: timeStamp,
+      },
     });
   }
 }

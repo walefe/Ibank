@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PayableService } from '../payable.service';
-import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { PayableModel } from '../../model/payable.model';
 import { BadRequestException } from '@nestjs/common';
+import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
 describe('Payable Service (unit)', () => {
   let service: PayableService;

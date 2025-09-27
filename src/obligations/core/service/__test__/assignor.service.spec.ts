@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AssignorService } from '../assignor.service';
-import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { AssignorModel } from '../../model/assignor.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
 describe('Assignor Service (unit)', () => {
   let service: AssignorService;

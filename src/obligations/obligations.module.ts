@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ObligationsController } from './http/rest/controller/obligations.controller';
 import { AssignorService } from './core/service/assignor.service';
 import { PayableService } from './core/service/payable.service';
-import { PersistenceModule } from './persistence/persistence.module';
+import { PersistenceModule } from '@src/shared/module/persistence/persistence.module';
 
 @Module({
   imports: [PersistenceModule],

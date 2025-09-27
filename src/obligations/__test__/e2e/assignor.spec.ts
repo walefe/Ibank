@@ -4,8 +4,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '@src/app.module';
-import { PrismaService } from '@src/obligations/persistence/service/prisma.service';
 import { CreateAssignorDto } from '@src/obligations/http/rest/dto/create-assignor.dto';
+import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
 describe('Assignor (e2e)', () => {
   let app: INestApplication<App>;

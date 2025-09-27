@@ -10,6 +10,6 @@ export default {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/dist/',
-    '/src/obligations/infra/database/prisma/client/',
+    '/src/shared/database/prisma/client/',
   ],
 };

@@ -29,6 +29,7 @@
   "sourceMaps": "inline",
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "src/shared/database/prisma/client"
   ]
 }
