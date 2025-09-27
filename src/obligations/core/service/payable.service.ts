@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PayableModel } from '../model/payable.model';
 import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
 
@@ -17,9 +21,10 @@ export class PayableService {
     emissionDate,
     assignorId,
   }: Input): Promise<PayableModel> {
-    const existAssignor = await this.prismaService.assignor.findUnique({
+    const existAssignor = await this.prismaService.assignor.findFirst({
       where: {
         id: assignorId,
+        deleteAt: null,
       },
     });
 
@@ -42,18 +47,65 @@ export class PayableService {
   }
 
   async findAll(): Promise<PayableModel[] | []> {
-    return await this.prismaService.payable.findMany();
+    return await this.prismaService.payable.findMany({
+      where: {
+        deleteAt: {
+          equals: null,
+        },
+      },
+    });
   }
 
   async findById(input: string): Promise<PayableModel | null> {
     const payable = await this.prismaService.payable.findFirst({
       where: {
         id: input,
+        deleteAt: null,
       },
     });
 
     if (!payable) return null;
 
     return PayableModel.createFrom(payable);
+  }
+
+  async updatePayable(
+    input: string,
+    data: Partial<Input>,
+  ): Promise<PayableModel> {
+    const payableExist = await this.prismaService.payable.findFirst({
+      where: {
+        id: input,
+        deleteAt: null,
+      },
+    });
+
+    if (!payableExist) throw new NotFoundException('Payable not found.');
+
+    return await this.prismaService.payable.update({
+      where: {
+        id: input,
+      },
+      data,
+    });
+  }
+
+  async deletePayable(input: string) {
+    const payableExist = await this.prismaService.payable.findFirst({
+      where: {
+        id: input,
+        deleteAt: null,
+      },
+    });
+    if (!payableExist) throw new NotFoundException('Payable not found.');
+    const timeStamp = new Date();
+    await this.prismaService.payable.update({
+      where: {
+        id: input,
+      },
+      data: {
+        deleteAt: timeStamp,
+      },
+    });
   }
 }

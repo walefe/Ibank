@@ -62,6 +62,7 @@ export class AssignorService {
     const assignor = await this.prismaService.assignor.findFirst({
       where: {
         id: input,
+        deleteAt: null,
       },
     });
 
@@ -74,13 +75,14 @@ export class AssignorService {
     input: string,
     data: Partial<Input>,
   ): Promise<AssignorModel> {
-    const assignorExist = await this.prismaService.assignor.findUnique({
+    const assignorExist = await this.prismaService.assignor.findFirst({
       where: {
         id: input,
+        deleteAt: null,
       },
     });
 
-    if (!assignorExist) throw new NotFoundException();
+    if (!assignorExist) throw new NotFoundException('Assignor not found.');
 
     return await this.prismaService.assignor.update({
       where: {
@@ -91,12 +93,13 @@ export class AssignorService {
   }
 
   async deleteAssignor(input: string) {
-    const assignorExist = await this.prismaService.assignor.findUnique({
+    const assignorExist = await this.prismaService.assignor.findFirst({
       where: {
         id: input,
+        deleteAt: null,
       },
     });
-    if (!assignorExist) throw new NotFoundException();
+    if (!assignorExist) throw new NotFoundException('Assignor not found.');
     const timeStamp = new Date();
     await this.prismaService.assignor.update({
       where: {

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Injectable,
   Param,
@@ -25,7 +26,13 @@ import {
   type UpdateAssignorDto,
   updateAssignorSchema,
 } from '../dto/update-assignore.dto';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  type UpdatePayableDto,
+  updatePayableSchema,
+} from '../dto/update-payable.dto';
 
+@ApiTags('Obligations')
 @Controller('obligations')
 @Injectable()
 export class ObligationsController {
@@ -33,23 +40,6 @@ export class ObligationsController {
     private readonly assignorService: AssignorService,
     private readonly payableService: PayableService,
   ) {}
-
-  @Get('payable')
-  async getPayables() {
-    const output = await this.payableService.findAll();
-    return {
-      data: output,
-    };
-  }
-
-  @Get('payable/:id')
-  async findOnePayable(@Param('id') id: string) {
-    const output = await this.payableService.findById(id);
-
-    return {
-      data: output,
-    };
-  }
 
   @Get('assignor')
   async getAssignors() {
@@ -62,16 +52,6 @@ export class ObligationsController {
   @Get('assignor/:id')
   async findOneAssignor(@Param('id') id: string) {
     const output = await this.assignorService.findById(id);
-    return {
-      data: output,
-    };
-  }
-
-  @Post('payable')
-  @UsePipes(new ZodValidationPipe(createPayableSchema))
-  async createObligations(@Body() createPayableDto: CreatePayableDto) {
-    const output = await this.payableService.create(createPayableDto);
-
     return {
       data: output,
     };
@@ -93,7 +73,6 @@ export class ObligationsController {
     @Body(new ZodValidationPipe(updateAssignorSchema))
     updateAssignorDto: UpdateAssignorDto,
   ) {
-    console.log(id);
     const output = await this.assignorService.updateAssignor(
       id,
       updateAssignorDto,
@@ -102,5 +81,58 @@ export class ObligationsController {
     return {
       data: output,
     };
+  }
+
+  @Delete('/assignor/:id')
+  async deleteAssignor(@Param('id') id: string) {
+    await this.assignorService.deleteAssignor(id);
+  }
+
+  @Get('payable')
+  async getPayables() {
+    const output = await this.payableService.findAll();
+    return {
+      data: output,
+    };
+  }
+
+  @Get('payable/:id')
+  async findOnePayable(@Param('id') id: string) {
+    const output = await this.payableService.findById(id);
+
+    return {
+      data: output,
+    };
+  }
+
+  @Post('payable')
+  @UsePipes(new ZodValidationPipe(createPayableSchema))
+  async createObligations(@Body() createPayableDto: CreatePayableDto) {
+    const output = await this.payableService.create(createPayableDto);
+
+    return {
+      data: output,
+    };
+  }
+
+  @Put('payable/:id')
+  async updatePayable(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updatePayableSchema))
+    updatePayableDto: UpdatePayableDto,
+  ) {
+    const output = await this.payableService.updatePayable(
+      id,
+      updatePayableDto,
+    );
+
+    return {
+      data: output,
+    };
+  }
+
+  @Delete('/payable/:id')
+  async deletePayable(@Param('id') id: string) {
+    await this.payableService.deletePayable(id);
   }
 }
