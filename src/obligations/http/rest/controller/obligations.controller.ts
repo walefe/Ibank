@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 
@@ -31,6 +32,10 @@ import {
   type UpdatePayableDto,
   updatePayableSchema,
 } from '../dto/update-payable.dto';
+import {
+  type PaginationDto,
+  paginationSchema,
+} from '@src/shared/dto/pagination.dto';
 
 @ApiTags('Obligations')
 @Controller('obligations')
@@ -42,10 +47,11 @@ export class ObligationsController {
   ) {}
 
   @Get('assignor')
-  async getAssignors() {
-    const output = await this.assignorService.findAll();
+  @UsePipes(new ZodValidationPipe(paginationSchema))
+  async getAssignors(@Query() paginationDto: PaginationDto) {
+    const output = await this.assignorService.findAll(paginationDto);
     return {
-      data: output,
+      ...output,
     };
   }
 
@@ -89,10 +95,11 @@ export class ObligationsController {
   }
 
   @Get('payable')
-  async getPayables() {
-    const output = await this.payableService.findAll();
+  @UsePipes(new ZodValidationPipe(paginationSchema))
+  async getPayables(@Query() paginationDto: PaginationDto) {
+    const output = await this.payableService.findAll(paginationDto);
     return {
-      data: output,
+      ...output,
     };
   }
 

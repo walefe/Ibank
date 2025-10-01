@@ -5,6 +5,12 @@ import {
 } from '@nestjs/common';
 import { PayableModel } from '../model/payable.model';
 import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
+import { PaginationDto } from '@src/shared/dto/pagination.dto';
+import {
+  PaginatedResult,
+  PaginationService,
+} from '@src/shared/module/persistence/service/pagination.service';
+import { Prisma } from '@src/shared/database/prisma/client';
 
 type Input = {
   value: number;
@@ -14,7 +20,10 @@ type Input = {
 
 @Injectable()
 export class PayableService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly paginationService: PaginationService,
+  ) {}
 
   async create({
     value,
@@ -46,14 +55,20 @@ export class PayableService {
     return payableModel;
   }
 
-  async findAll(): Promise<PayableModel[] | []> {
-    return await this.prismaService.payable.findMany({
-      where: {
-        deleteAt: {
-          equals: null,
-        },
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResult<PayableModel>> {
+    const where: Prisma.PayableWhereInput = {
+      deleteAt: {
+        equals: null,
       },
-    });
+    };
+
+    return await this.paginationService.paginate<
+      PayableModel,
+      Prisma.PayableWhereInput,
+      Prisma.PayableFindManyArgs
+    >(this.prismaService.payable, paginationDto, { where });
   }
 
   async findById(input: string): Promise<PayableModel | null> {

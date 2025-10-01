@@ -5,6 +5,12 @@ import {
 } from '@nestjs/common';
 import { AssignorModel } from '../model/assignor.model';
 import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
+import {
+  PaginatedResult,
+  PaginationService,
+} from '@src/shared/module/persistence/service/pagination.service';
+import { PaginationDto } from '@src/shared/dto/pagination.dto';
+import { Prisma } from '@src/shared/database/prisma/client';
 
 type Input = {
   name: string;
@@ -15,7 +21,10 @@ type Input = {
 
 @Injectable()
 export class AssignorService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly paginationService: PaginationService,
+  ) {}
 
   async create({
     name,
@@ -48,14 +57,26 @@ export class AssignorService {
     return assignorModel;
   }
 
-  async findAll(): Promise<AssignorModel[] | []> {
-    return await this.prismaService.assignor.findMany({
-      where: {
-        deleteAt: {
-          equals: null,
-        },
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResult<AssignorModel>> {
+    const where: Prisma.AssignorWhereInput = {
+      deleteAt: {
+        equals: null,
       },
-    });
+    };
+    if (paginationDto.search) {
+      where.OR = [
+        { name: { contains: paginationDto.search, mode: 'insensitive' } },
+        { email: { contains: paginationDto.search, mode: 'insensitive' } },
+      ];
+    }
+
+    return await this.paginationService.paginate<
+      AssignorModel,
+      Prisma.AssignorWhereInput,
+      Prisma.AssignorFindManyArgs
+    >(this.prismaService.assignor, paginationDto, { where });
   }
 
   async findById(input: string): Promise<AssignorModel | null> {
