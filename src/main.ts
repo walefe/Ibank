@@ -8,6 +8,7 @@ import { ConfigService } from './shared/module/config/service/config.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter(new ConfigService()));
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Ibank')
     .setDescription('A simple api')
