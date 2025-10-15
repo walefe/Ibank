@@ -21,8 +21,8 @@ import {
   type CreateAssignorDto,
 } from '../dto/create-assignor.dto';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
-import { AssignorService } from '@src/obligations/core/service/assignor.service';
-import { PayableService } from '@src/obligations/core/service/payable.service';
+import { AssignorService } from '@src/module/obligations/core/service/assignor.service';
+import { PayableService } from '@src/module/obligations/core/service/payable.service';
 import {
   type UpdateAssignorDto,
   updateAssignorSchema,
@@ -35,7 +35,7 @@ import {
 import {
   type PaginationDto,
   paginationSchema,
-} from '@src/shared/dto/pagination.dto';
+} from '@src/module/shared/dto/pagination.dto';
 
 @ApiTags('Obligations')
 @Controller('obligations')

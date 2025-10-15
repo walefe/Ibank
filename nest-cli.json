@@ -8,7 +8,7 @@
     "deleteOutDir": true,
        "assets": [
       {
-        "include": "shared/database/prisma/client/**/*",
+        "include": "module/shared/database/prisma/client/**/*",
         "watchAssets": true
       }
     ]

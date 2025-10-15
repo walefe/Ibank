@@ -58,4 +58,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # database
 .data
 
-/src/shared/database/prisma/client
+/src/module/shared/database/prisma/client

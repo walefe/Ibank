@@ -5,11 +5,11 @@ export default {
   testMatch: ['<rootDir>/src/**/*.spec.ts', '<rootDir>/src/**/*.test.ts'],
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
-    '<rootDir>/src/obligations/__test__/e2e/',
+    '<rootDir>/src/module/obligations/__test__/e2e/',
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/dist/',
-    '/src/shared/database/prisma/client/',
+    '/src/module/shared/database/prisma/client/',
   ],
 };

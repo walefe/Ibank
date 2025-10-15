@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationDto } from '@src/shared/dto/pagination.dto';
+import { PaginationDto } from '@src/module/shared/dto/pagination.dto';
 
 export interface PaginatedResult<T> {
   data: T[];

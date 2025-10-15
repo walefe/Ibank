@@ -119,7 +119,7 @@ docs/
 *.sqlite3
 
 # Prisma generated client (will be generated in container)
-src/shared/database/prisma/client
+src/module/shared/database/prisma/client
 
 # Local database data
 .data

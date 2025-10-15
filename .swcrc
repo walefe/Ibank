@@ -30,6 +30,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/shared/database/prisma/client"
+    "src/module/shared/database/prisma/client"
   ]
 }

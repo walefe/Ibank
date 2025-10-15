@@ -7,7 +7,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml ./
 COPY prisma.config.ts ./
-COPY src/shared/database/prisma ./src/shared/database/prisma
+COPY src/module/shared/database/prisma ./src/module/shared/database/prisma
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm exec prisma generate
@@ -16,13 +16,15 @@ RUN pnpm exec prisma generate
 # -------------------------------------------------
 FROM base AS development
 COPY . .
-EXPOSE 3000
+EXPOSE 3000 5555
+CMD ["sh", "-c", "pnpm exec prisma db push && pnpm run start:dev"]
 # -------------------------------------------------
 # Build stage
 # -------------------------------------------------
 FROM base AS build
 COPY . .
 RUN pnpm run build
+RUN pnpm prune --prod
 # -------------------------------------------------
 # Production stage
 # -------------------------------------------------
@@ -32,13 +34,17 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml ./
 COPY prisma.config.ts ./
-COPY src/shared/database/prisma ./src/shared/database/prisma
+COPY src/module/shared/database/prisma ./src/module/shared/database/prisma
 
-RUN pnpm install --frozen-lockfile
-RUN pnpm exec prisma generate
 RUN pnpm install --frozen-lockfile --prod
+RUN pnpm exec prisma generate
 
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build app/dist ./dist
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001 && \
+    chown -R nestjs:nodejs /app
+
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "pnpm exec prisma migrate deploy && node dist/main"]

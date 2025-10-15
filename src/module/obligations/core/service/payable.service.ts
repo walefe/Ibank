@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PayableModel } from '../model/payable.model';
-import { PrismaService } from '@src/shared/module/persistence/service/prisma.service';
-import { PaginationDto } from '@src/shared/dto/pagination.dto';
+import { PrismaService } from '@src/module/shared/module/persistence/service/prisma.service';
+import { PaginationDto } from '@src/module/shared/dto/pagination.dto';
 import {
   PaginatedResult,
   PaginationService,
-} from '@src/shared/module/persistence/service/pagination.service';
-import { Prisma } from '@src/shared/database/prisma/client';
+} from '@src/module/shared/module/persistence/service/pagination.service';
+import { Prisma } from '@src/module/shared/database/prisma/client';
 
 type Input = {
   value: number;

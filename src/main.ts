@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './shared/filter/http-exception.filter';
-import { ConfigService } from './shared/module/config/service/config.service';
+import { ConfigService } from '@src/module/shared/module/config/service/config.service';
+import { HttpExceptionFilter } from '@src/module/shared/filter/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
